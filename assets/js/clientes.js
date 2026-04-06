@@ -38,6 +38,7 @@ $(document).ready(function () {
 			function () {
 				limpiar();
 				listar();
+				cargarClientes(); // 🔥 refresca el select
 			},
 		);
 	});

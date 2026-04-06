@@ -60,7 +60,7 @@ class Clientes extends CI_Controller
             }
         }
 
-        // 🔥 GUARDAR
+        //  GUARDAR
         if (!empty($data['id'])) {
             $this->Cliente_model->actualizar($data);
         } else {
