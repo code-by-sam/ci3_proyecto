@@ -10,13 +10,28 @@ $(document).ready(function () {
 			dni: $("#dni").val(),
 			sexo: $("#sexo").val(),
 		};
+		let dni = data.dni;
 
-		// 🔥 VALIDACIÓN DNI
+		//  VALIDACIÓNES DNI
 		if (data.dni.trim() === "") {
 			alert("El DNI es obligatorio");
 			$("#dni").focus();
-			return; // ❗ detiene el proceso
+			return; //
 		}
+
+		if (data.email.trim() === "") {
+			alert("El email es obligatorio");
+			$("#email").focus();
+			return; //
+		}
+
+		// 🔥 SOLO NÚMEROS Y 8 DÍGITOS
+		if (!/^\d{8}$/.test(dni)) {
+			alert("El DNI debe tener exactamente 8 dígitos y solo números");
+			$("#dni").focus();
+			return;
+		}
+
 		$.post(
 			"http://localhost/ci3_proyecto/index.php/clientes/guardar",
 			data,

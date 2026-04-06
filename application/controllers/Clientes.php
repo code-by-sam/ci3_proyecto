@@ -26,11 +26,27 @@ class Clientes extends CI_Controller
     {
         $data = $this->input->post();
 
+        //  VALIDAR CAMPOS VACÍOS
+        if (empty($data['dni']) || empty($data['email'])) {
+            echo json_encode(["error" => "Campos obligatorios vacíos"]);
+            return;
+        }
+
+        //  VALIDAR DNI (8 dígitos)
+        if (!preg_match('/^\d{8}$/', $data['dni'])) {
+            echo json_encode(["error" => "DNI debe tener 8 dígitos numéricos"]);
+            return;
+        }
+
+        //  VALIDAR EMAIL
+        if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            echo json_encode(["error" => "Email inválido"]);
+            return;
+        }
+
         //  VALIDAR DNI REPETIDO
         if ($this->Cliente_model->existeDni($data['dni'])) {
-
-            // SI ESTÁS EDITANDO, permite el mismo DNI
-            if (!isset($data['id']) || $data['id'] == "") {
+            if (empty($data['id'])) {
                 echo json_encode(["error" => "DNI ya existe"]);
                 return;
             }
@@ -38,20 +54,16 @@ class Clientes extends CI_Controller
 
         // 🔥 VALIDAR EMAIL REPETIDO
         if ($this->Cliente_model->existeEmail($data['email'])) {
-
-            // SI ESTÁS EDITANDO, permite el mismo email
-            if (!isset($data['id']) || $data['id'] == "") {
+            if (empty($data['id'])) {
                 echo json_encode(["error" => "Email ya existe"]);
                 return;
             }
         }
 
-        //  AQUÍ YA VALIDADO → AHORA SÍ GUARDAS
-        if (isset($data['id']) && $data['id'] != "") {
-            // UPDATE
+        // 🔥 GUARDAR
+        if (!empty($data['id'])) {
             $this->Cliente_model->actualizar($data);
         } else {
-            // INSERT
             $this->Cliente_model->insertar($data);
         }
 
